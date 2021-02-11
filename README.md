@@ -1,0 +1,2 @@
+# Algebra-Geometrica
+Calcular a estrutura 3D de uma molécula de proteína é uma questão fundamental para entendermos os funcionamentos dos organismos vivos. O experimento de Ressonância Magnética Nuclear (RMN) consegue gerar distâncias entre pares de átomos próximos, entretanto isso não é o suficiente para determinar sua estrutura. A finalidade deste repositorio é buscar um algoritmo que consiga utilizar os dados de RMN para gerar a estrutura de uma proteína através da Álgebra Geométrica, como recurso para o Problema de Geometria de Distância Molecular.
