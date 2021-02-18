@@ -1,5 +1,4 @@
 import math
-import random
 
 '''
 Biblioteca implementada por Dilermando
@@ -15,14 +14,36 @@ ex: e1 = 1
     e1^e2^e3 = 7 
 '''
 
+class Metrica():
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+
+    def entrada_diagonal(self, index):
+        if index <= self.p:
+            return +1
+        elif index <= self.p + self.q:
+            return -1
+        else:
+            return 0
+
+    def fator_metrica(self, masc):
+        index = 0
+        mascr = 1
+
+        while masc != 0:
+            if (masc & 1) != 0:
+                mascr *= self.entrada_diagonal(index)
+            masc >>= 1
+            index += 1
+        return mascr
+
 '''
 Adiciona um elemento a um multevetor = multr
 '''
 def adicionar(coef,masc,multr):
-    sup=list()
-    sup.append(coef)
-    sup.append(masc)
-    multr.append(sup[:])
+    multr.append([coef, masc])
+
     return multr
 
 '''
@@ -132,20 +153,43 @@ def sub(mult1, mult2):
     return multr
 
 '''
-Calcula o produto externo entre dois multivetores
+Soma as bases comuns e retira as que tem coeficiente 0
+'''
+def analisesoma(mult):
+    for c in range(0,len(mult)):
+        for k in range(c+1, len(mult)):
+            if (mult[k][1] == mult[c][1]):
+                mult[c][0] = mult[c][0]+mult[k][0]
+                mult[k][0] = 0
+
+    multr=list()
+
+    for c in range(0, len(mult)):                               
+        if (mult[c][0] != 0):
+            multr=adicionar(mult[c][0],mult[c][1],multr)
+
+    multr.sort(key=sortSecond)
+    return multr
+
+def sortSecond(val):
+    return val[1]
+
+def sortFirst(val):
+    return val[0]
+
+
+'''
+Calcula o produto externo entre dois multivetores -- Não é um produto metrico
 '''
 def pexterno(mult1,mult2):
     multr = list()
-    sup = list()
     coef=0
     masc=0
+
     for c in range(0,len(mult1)):
         for k in range(0,len(mult2)):
             coef,masc = pexterno2(mult1[c][0],mult1[c][1],mult2[k][0],mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+            multr.append([coef, masc])
 
     multr = analisesoma(multr)
 
@@ -194,45 +238,17 @@ def colisoes(masc):
     return masc
 
 '''
-Soma as bases comuns e retira as que tem coeficiente 0
-'''
-def analisesoma(mult):
-    for c in range(0,len(mult)):
-        for k in range(c+1, len(mult)):
-            if (mult[k][1] == mult[c][1]):
-                mult[c][0] = mult[c][0]+mult[k][0]
-                mult[k][0] = 0
-
-    multr=list()
-
-    for c in range(0, len(mult)):                               
-        if (mult[c][0] != 0):
-            multr=adicionar(mult[c][0],mult[c][1],multr)
-
-    multr.sort(key=sortSecond)
-    return multr
-
-def sortSecond(val):
-    return val[1]
-
-def sortFirst(val):
-    return val[0]
-
-'''
 Calcula o produto regressivo entre dois multivetores
 '''
 def pregressivo(mult1,mult2):
     multr = list()
-    sup = list()
     coef = 0
     masc = 0
+
     for c in range(0, len(mult1)):
         for k in range(0, len(mult2)):
             coef, masc = pregressivo2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+            multr.append([coef, masc])
 
     return multr
 
@@ -297,30 +313,28 @@ def graumasc(masc):
     return gmasc
 
 '''
-Calcula o produto geometrico entre dois multivetores
+Calcula o produto geometrico entre dois multivetores,
+por padrao a metrica sera R^3
 '''
-def pgeometrico(mult1,mult2):
+def pgeometrico(mult1, mult2, metrica = Metrica(3, 0)):
     multr = list()
-    sup = list()
-    coef=0
-    masc=0
-    for c in range(0,len(mult1)):
-        for k in range(0,len(mult2)):
-            coef,masc = pgeometrico2(mult1[c][0],mult1[c][1],mult2[k][0],mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+    coef = 0
+    masc = 0
+
+    for c in range(0, len(mult1)):
+        for k in range(0, len(mult2)):
+            coef,masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1], metrica)
+            multr.append([coef, masc])
 
     multr = analisesoma(multr)
 
     return multr
 
-def pgeometrico2(coef1,masc1,coef2,masc2):
-    sinal=reordenacanonica(masc1, masc2)
-    metrica=fatormetrica(masc1,masc2)
-    coefr=sinal*metrica*coef1*coef2
-    mascr=masc1^masc2
+def pgeometrico2(coef1, masc1, coef2, masc2, metrica):
+    sinal = reordenacanonica(masc1, masc2)
+    metrica = metrica.fator_metrica(masc1 & masc2)
+    coefr = sinal * metrica * coef1 * coef2
+    mascr = masc1 ^ masc2
 
     return coefr, mascr
 
@@ -447,77 +461,65 @@ def involucao(mult, a):
         mult[c][0]=((-1)**a)*mult[c][0]
     return mult
 
-def contracaoesq(mult1, mult2):
-    mult1 = analisesoma(mult1)
-    mult2 = analisesoma(mult2)
+def contracaoesq(mult1, mult2, metrica = Metrica(3, 0)):
     multr = list()
-    sup = list()
     coef = 0
     masc = 0
+
     for c in range(0, len(mult1)):
         for k in range(0, len(mult2)):
-            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1], metrica)
+            multr.append([coef, masc])
             multr = extracaodograu(multr, graumasc(mult2[k][1]) - graumasc(mult1[c][1]))
+
     multr = analisesoma(multr)
+    
     return multr
 
-def contracaodir(mult1, mult2):
-    mult1 = analisesoma(mult1)
-    mult2 = analisesoma(mult2)
+def contracaodir(mult1, mult2, metrica = Metrica(3, 0)):
     multr = list()
-    sup = list()
     coef = 0
     masc = 0
+
     for c in range(0, len(mult1)):
         for k in range(0, len(mult2)):
-            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1], metrica)
+            multr.append([coef, masc])
             multr = extracaodograu(multr, graumasc(mult1[c][1]) - graumasc(mult2[k][1]))
+
     multr = analisesoma(multr)
+
     return multr
 
-def produtoescalar(mult1, mult2):
-    mult1 = analisesoma(mult1)
-    mult2 = analisesoma(mult2)
+def produtoescalar(mult1, mult2, metrica = Metrica(3, 0)):
     multr = list()
-    sup = list()
     coef = 0
     masc = 0
+
     for c in range(0, len(mult1)):
         for k in range(0, len(mult2)):
-            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
+            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1], metrica)
+            multr.append([coef, masc])
+
     multr = extracaodograu(multr, 0)
     multr = analisesoma(multr)
+
     return multr
 
-def produtodelta(blade1, blade2):
-    mult1 = analisesoma(blade1)
-    mult2 = analisesoma(blade2)
+def produtodelta(mult1, mult2, metrica = Metrica(3, 0)):
     multr = list()
-    sup = list()
     coef = 0
     masc = 0
+    
     for c in range(0, len(mult1)):
         for k in range(0, len(mult2)):
-            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
-            sup.append(coef)
-            sup.append(masc)
-            multr.append(sup[:])
-            sup.clear()
-    bladr = extracaodograumax(multr)
-    bladr = analisesoma(multr)
-    return bladr
+            coef, masc = pgeometrico2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1], metrica)
+            multr.append([coef, masc])
+
+    multr = extracaodograumax(multr)
+    multr = analisesoma(multr)
+
+    return multr
 
 def projecao(mult, blade, a, b):
     mult=extracaodograu(mult, a)
@@ -525,6 +527,7 @@ def projecao(mult, blade, a, b):
     bladerev=inverso(blade, b)
     contra1=contracaoesq(mult, bladerev)
     vetor=contracaoesq(contra1, blade)
+
     return vetor
 
 def dual(mult, a, n):
@@ -541,6 +544,7 @@ def dual(mult, a, n):
 def produtovetorial(mult1, mult2):
     multr = pexterno(mult1, mult2)
     multr = dual(multr, 2, 3)
+
     return multr
 
 def desdualizacao(dual, n):
@@ -610,7 +614,7 @@ def fatoracao(blade, a):
 def reflexao(mult, rotor, n):
     #troquei inverso(multv, grau(mult))
     multv=dual(rotor,(n-1),n)
-    multvinverso=inverso(multv, -1)
+    multvinverso = inverso(multv, -1)
     multr=pgeometrico(multv, mult)
     multr=pgeometrico(multr, multvinverso)
     for c in range(0,len(multr)):
