@@ -36,6 +36,7 @@ class Metrica():
                 mascr *= self.entrada_diagonal(index)
             masc >>= 1
             index += 1
+
         return mascr
 
 '''
@@ -50,113 +51,87 @@ def adicionar(coef,masc,multr):
 Soma dois multivetores
 '''
 def soma(mult1, mult2):
-    mult1=analisesoma(mult1)
-    mult2=analisesoma(mult2)
-    sup=list()
     multr=list()
     aux=aux2=0
     c=k=0
-    while (aux!=len(mult1) and (aux2!=len(mult2))):
+
+    while(aux != len(mult1) and (aux2 != len(mult2))):
         if mult1[c][1] == mult2[k][1]:
-            sup.append(mult1[c][0]+mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux=aux+1
-            aux2=aux2+1
-            c=c+1
-            k=k+1
+            multr.append([mult1[c][0]+mult2[k][0], mult2[k][1]])
+            aux = aux + 1
+            aux2 = aux2 + 1
+            c = c + 1
+            k = k + 1
 
         elif mult1[c][1] < mult2[k][1]:
-            sup.append(mult1[c][0])
-            sup.append(mult1[c][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux=aux+1
-            c=c+1
+            multr.append([mult1[c][0], mult1[c][1]])
+            aux = aux + 1
+            c = c + 1
 
         else:
-            sup.append(mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux2=aux2+1
-            k=k+1
-    if c!=len(mult1):
-        while c!=len(mult1):
-            sup.append(mult1[c][0])
-            sup.append(mult1[c][1])
-            multr.append(sup[:])
-            sup.clear()
-            c=c+1
-    if k!=len(mult2):
-        while k!=len(mult2):
-            sup.append(mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            k=k+1
-    multr=analisesoma(multr)
+            multr.append([mult2[k][0], mult2[k][1]])
+            aux2 = aux2 + 1
+            k = k + 1
+
+    if c != len(mult1):
+        while c != len(mult1):
+            multr.append([mult1[c][0], mult1[c][1]])
+            c = c + 1
+
+    if k != len(mult2):
+        while k != len(mult2):
+            multr.append([mult2[k][0], mult2[k][1]])
+            k = k + 1
+
+    multr = analisesoma(multr)
+
     return multr
 
 '''
 Subtrai dois multivetores
 '''
 def sub(mult1, mult2):
-    mult1=analisesoma(mult1)
-    mult2=analisesoma(mult2)
-    sup=list()
     multr=list()
     aux=aux2=0
     c=k=0
-    while (aux!=len(mult1) and (aux2!=len(mult2))):
+
+    while (aux != len(mult1) and (aux2 != len(mult2))):
         if mult1[c][1] == mult2[k][1]:
-            sup.append(mult1[c][0]-mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux=aux+1
-            aux2=aux2+1
-            c=c+1
-            k=k+1
+            multr.append([mult1[c][0] - mult2[k][0], mult2[k][1]])
+            aux = aux + 1
+            aux2 = aux2 + 1
+            c = c + 1
+            k = k + 1
 
         elif mult1[c][1] < mult2[k][1]:
-            sup.append(mult1[c][0])
-            sup.append(mult1[c][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux=aux+1
-            c=c+1
+            multr.append([mult1[c][0], mult1[c][1]])
+            aux = aux + 1
+            c = c + 1
 
         else:
-            sup.append(-1*mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            aux2=aux2+1
-            k=k+1
+            multr.append([-1*mult2[k][0], mult2[k][1]])
+            aux2 = aux2 + 1
+            k = k + 1
+
     if c!=len(mult1):
         while c!=len(mult1):
-            sup.append(mult1[c][0])
-            sup.append(mult1[c][1])
-            multr.append(sup[:])
-            sup.clear()
-            c=c+1
+            multr.append([mult1[c][0], mult1[c][1]])
+            c = c + 1
+
     if k!=len(mult2):
         while k!=len(mult2):
-            sup.append(-1*mult2[k][0])
-            sup.append(mult2[k][1])
-            multr.append(sup[:])
-            sup.clear()
-            k=k+1
+            multr.append([-1*mult2[k][0], mult2[k][1]])
+            k = k + 1
+
     multr=analisesoma(multr)
+
     return multr
 
 '''
 Soma as bases comuns e retira as que tem coeficiente 0
 '''
 def analisesoma(mult):
-    for c in range(0,len(mult)):
+    for c in range(0, len(mult)):
         for k in range(c+1, len(mult)):
             if (mult[k][1] == mult[c][1]):
                 mult[c][0] = mult[c][0]+mult[k][0]
@@ -166,9 +141,10 @@ def analisesoma(mult):
 
     for c in range(0, len(mult)):                               
         if (mult[c][0] != 0):
-            multr=adicionar(mult[c][0],mult[c][1],multr)
+            multr.append([mult[c][0], mult[c][1]])
 
     multr.sort(key=sortSecond)
+
     return multr
 
 def sortSecond(val):
