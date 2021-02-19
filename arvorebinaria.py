@@ -1,7 +1,10 @@
 from algebrageo import *
-import PGDMD
-import math
+from math import *
 import protein
+
+'''
+Arvore de busca para o PGDMD com distancias exatas
+'''
 
 class Node:
     def __init__(self, data):
@@ -136,20 +139,58 @@ def validade(no, x, i):
     else:
         return True
 
+def angulo_entrada(x):
+    angulos=list()
+    a = list()
+    for n in range(2, len(x)-1):
+        for c in range(0, len(x[n])):
+            a.append(x[n][c] - x[n-1][c])
+
+        b = list()
+        for c in range(0, len(x[n])):
+            b.append(x[n][c] - x[n+1][c])
+
+        aux = 0
+        aux2 = 0
+        aux3 = 0
+        for c in range(0, 3):
+            aux = aux + a[c]*b[c]
+            aux2 = aux2 + a[c]**2
+            aux3 = aux3 + b[c]**2
+            resultado = acos(aux / (sqrt(aux2) * sqrt(aux3)))
+        angulos.append(resultado)
+        a.clear()
+        b.clear()
+
+    return angulos
+
+def distancia_entrada(x):
+    di = list()
+    aux1 = list()
+    aux = 0
+    for n in range(0, len(x)):
+        for l in range(0, len(x)):
+            if(l!=n):
+                for c in range(0, 3):
+                    aux = aux + (x[l][c]-x[n][c])**2
+            else:
+                aux = 0
+            aux = sqrt(aux)
+            aux1.append(aux)
+            aux = 0
+        di.append(aux1[:])
+        aux1.clear()
+
+    return di
 
 if __name__ == "__main__":
     
-    m0k = [[-30.003, 7.946, 35.233],
-           [-30.733, 6.951, 35.323],
-           [-31.987, 6.879, 34.568],
-           [-32.256, 8.140, 33.830],
-           [-31.873, 5.666, 33.608],
-           [-32.876, 5.637, 32.655]]
-
+    #Calculo para a protein feb4
+    #https://www.rcsb.org/structure/4FEB
     feb4 = protein.feb
     n = len(feb4)
-    teta = PGDMD.angulo(feb4)
-    di = PGDMD.distancia(feb4)
+    teta = angulo_entrada(feb4)
+    di = distancia_entrada(feb4)
 
     atomo1 = Node([[-4.975, 1], [-16.627, 2], [-2.799, 4]])
     atomo2 = Node([[-4.88, 1], [-15.165, 2], [-3.047, 4]])
