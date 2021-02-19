@@ -1,7 +1,7 @@
 import math
 
 '''
-Biblioteca implementada por Dilermando
+Biblioteca implementada por Dilermando Queiroz Neto
 
 estrutura do multivetor [[coeficiente, base], [coeficiente, base] ...]
 base esta representada pelos numeros decimais
@@ -153,7 +153,6 @@ def sortSecond(val):
 def sortFirst(val):
     return val[0]
 
-
 '''
 Calcula o produto externo entre dois multivetores -- Não é um produto metrico
 '''
@@ -164,7 +163,7 @@ def pexterno(mult1,mult2):
 
     for c in range(0,len(mult1)):
         for k in range(0,len(mult2)):
-            coef,masc = pexterno2(mult1[c][0],mult1[c][1],mult2[k][0],mult2[k][1])
+            coef,masc = pexterno2(mult1[c][0], mult1[c][1], mult2[k][0], mult2[k][1])
             multr.append([coef, masc])
 
     multr = analisesoma(multr)
@@ -192,6 +191,7 @@ ex: e3^e2 -> -e2^e3
 def reordenacanonica(masc1,masc2):
     trocas=0
     masc1=masc1>>1
+    
     while masc1!=0:
         trocas=trocas+colisoes(masc1 & masc2)
         masc1=masc1>>1
@@ -314,66 +314,46 @@ def pgeometrico2(coef1, masc1, coef2, masc2, metrica):
 
     return coefr, mascr
 
-def fatormetrica(masc1,masc2):
-    mascr=1
-    return mascr
-
 '''
 Retorna os elemetos com grau a do multivetor
 '''
 def extracaodograu(mult, a):
     multr=list()
-    sup=list()
+
     for c in range(0,len(mult)):
         if a==-1:
             if mult[c][1]>=0:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==0:
             if mult[c][1]==0:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==1:
             if mult[c][1]==1 or mult[c][1]==2 or mult[c][1]==4 or mult[c][1]==8 or mult[c][1]==16:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==2:
             if mult[c][1]==3 or mult[c][1]==5 or mult[c][1]==6 or mult[c][1]==9 or mult[c][1]==10 or mult[c][1]==12 or mult[c][1]==17 or mult[c][1]==18 or mult[c][1]==20 or mult[c][1]==24:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==3:
             if mult[c][1]==7 or mult[c][1]==13 or mult[c][1]==25 or mult[c][1]==19 or mult[c][1]==21 or mult[c][1]==11 or mult[c][1]==14 or mult[c][1]==22 or mult[c][1]==26 or mult[c][1]==28:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==4:
             if mult[c][1]==15 or mult[c][1]==29 or mult[c][1]==27 or mult[c][1]==23 or mult[c][1]==30:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
+
         elif a==5:
             if mult[c][1] == 31:
-                sup.append(mult[c][0])
-                sup.append(mult[c][1])
-                multr.append(sup[:])
-                sup.clear()
+                multr.append([mult[c][0], mult[c][1]])
 
     return multr
 
 '''
 Retorna o maior elemento do multivetor
 '''
-
 def extracaodograumax(mult):
     maior = max(mult, key=sortSecond)
     maior.remove(maior[0])
@@ -382,7 +362,6 @@ def extracaodograumax(mult):
 '''
 Calcula o reverso de um multivetor onde a é o grau
 '''
-
 def reverso(mult, a):
     mult=extracaodograu(mult, a)
     for c in range(0,len(mult)):
@@ -521,16 +500,6 @@ def produtovetorial(mult1, mult2):
     multr = pexterno(mult1, mult2)
     multr = dual(multr, 2, 3)
 
-    return multr
-
-def desdualizacao(dual, n):
-    if n == 3:
-        I = [[1, 7]]
-    elif n == 4:
-        I = [[1, 15]]
-    elif n == 5:
-        I = [[1, 31]]
-    multr=contracaoesq(dual,I)
     return multr
 
 def mascarafatoracao(mult):
