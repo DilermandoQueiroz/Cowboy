@@ -86,6 +86,14 @@ class MultiVetor():
         if not isinstance(mult2, MultiVetor):
             mult2 = MultiVetor(mult2)
         return produto_geometrico(mult2, self)
+
+    def __invert__(self):
+        return inverso(self)
+
+    def __lshift__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
+        return contracao_esquerda(self, mult2)
     
     def __str__(self):
         '''str(self)
