@@ -16,3 +16,19 @@ $$
 
 onde $\eta_i$ sãos os coeficientes.
 
+
+
+### Resumo da sintaxe
+
+-------
+
+| Sintaxe  | Operação |
+|:-:|:-:|
+| + |  soma |
+| - |  subtração |
+|  ^ | produto externo |
+| *  | produto geométrico |
+| ~  | inverso |
+| <<  | contração a esquerda |
+
+
