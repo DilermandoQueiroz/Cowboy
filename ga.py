@@ -15,8 +15,6 @@ ex: e1 = 1
     e1^e2^e3 = 7 
 '''
 
-
-
 class Metrica():
     '''Metrica ortogonal com assinatura p,q.
     '''
@@ -603,56 +601,22 @@ def angulo(mult1, mult2):
 
     return angulo
 
-def fatoracao(blade, a):
-    bladeK=blade[:]
-    blade=extracao_grau(blade, a)
-    masc=mascarafatoracao(blade)
-    escalar=norma_reversa_2(blade, a)
-    masck=list()
-    sup=list()
-    fatores=list()
-    for c in range(0,len(escalar)):
-        escalar[c][0]=escalar[c][0]**(1/2)
-    temp=mult_normalizado(bladeK, a)
-    for c in range(0,len(masc)):
-        sup.append(masc[c])
-        masck.append(sup[:])
-        sup.clear()
-    for c in range(0,len(masc)-1):
-        proj=projecao(masck[c],temp,-1,a)
-        fatorj=mult_normalizado(proj, -1)
-        print(fatorj)
-        fatores.append(fatorj)                              #Exemplo [[[1,1],[7,2]]]
-        temp=contracao_esquerda(inverso(fatorj,-1),temp)
-    fatork=mult_normalizado(temp,-1)
-    for c in range(0,len(fatork)):
-        sup.append(fatork[c][0])
-        sup.append(fatork[c][1])
-        fatores.append(sup[:])
-        sup.clear()
-    sup.append(escalar[0][0])
-    sup.append(escalar[0][1])
-    fatores.append(sup[:])
-    sup.clear()                                     #Exemplo: [ [[-3,1],[7,2]], [-1,4], [4,0] ]
-    return escalar, fatork, fatores
+def base(mult):
+    """Extrai a base que forma o multivetor
+    """
+    if isinstance(mult, MultiVetor):
+        mult = mult.componentes
 
-def mascarafatoracao(mult):
-    masc=list()
-    sup=list()
-    sup2=list()
-    aux=0
-    for c in range(0,len(mult)):
-        if mult[c][0] < 0:
-            mult[c][0]=mult[c][0]*-1
-    mult.sort(key=sortFirst, reverse=True)
-    sup.append(mult[0][1])
-    while sup[0]!=0:
-        if (sup[0]&1)==1:
-            sup2.append(1)
-            sup2.append(2**aux)
-            masc.append(sup2[:])
-            sup2.clear()
-        aux=aux+1
-        sup[0]=sup[0]>>1
+    bits = 0
+    for blade in mult:
+        bits ^= blade[1]
 
-    return masc
+    i = 0
+    result = []
+    while bits != 0:
+        if (bits & 1) == 1:
+            result.append([1, 2**i])
+        bits >>= 1
+        i += 1
+
+    return MultiVetor(result)
