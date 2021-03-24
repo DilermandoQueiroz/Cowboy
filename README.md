@@ -45,6 +45,7 @@ c = MultiVetor([[5, 0], [3, 1], [1, 3]])
 | - |  subtração |
 |  ^ | produto externo |
 | *  | produto geométrico |
+| / | produto geométrico inverso |
 | ~  | reverso |
 | <<  | contração a esquerda |
 

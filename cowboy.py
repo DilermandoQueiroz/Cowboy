@@ -69,7 +69,14 @@ class MultiVetor():
             raise ValueError
     
     def __add__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
         return soma(self, mult2)
+
+    def __radd__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
+        return soma(mult2, self)
 
     def __sub__(self, mult2):
         return sub(self, mult2)
@@ -94,6 +101,21 @@ class MultiVetor():
         if not isinstance(mult2, MultiVetor):
             mult2 = MultiVetor(mult2)
         return contracao_esquerda(self, mult2)
+
+    def __truediv__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
+
+        mult2 = inverso(mult2)
+        
+        return produto_geometrico(self, inverso(mult2))
+
+    def __float__(self):
+        if is_escalar(self):
+            return float(self.componentes[0][0])
+        else:
+            raise ValueError("nao eh um escalar")
+    
     
     def __str__(self):
         '''str(self)
@@ -486,13 +508,14 @@ def reverso(mult, a = -1):
 def norma_reversa_2(mult, a = -1):
     """Calcula o quadrado da norma reversa
     """
-
     if a != -1:
         mult = extracao_grau(mult, a)
     
     multrev = reverso(mult, a)
-
     multr = produto_escalar(mult, multrev)
+
+    if not multr.componentes:
+        return ValueError("blade nulo")
 
     return multr
 
@@ -538,7 +561,11 @@ def inverso(mult, a = -1):
     mult_rev = reverso(mult, a)
     mult_rev = mult_rev.componentes
     mult_norma_2 = norma_reversa_2(deepcopy(mult), a)
-    norma_2 = mult_norma_2.componentes[0][0]
+
+    if not ValueError:
+        norma_2 = mult_norma_2.componentes[0][0]
+    else:
+        return ValueError("blade nulo")
 
     for blade in mult_rev:
         multr.append([blade[0] / norma_2, blade[1]])
@@ -628,3 +655,12 @@ def base(mult):
         i += 1
 
     return MultiVetor(result)
+
+def is_escalar(mult):
+    if isinstance(mult, MultiVetor):
+        if len(mult.componentes) == 1 and mult.componentes[0][1] == 0:
+            return True
+        else:
+            return False
+    else:
+        raise ValueError("não é um multivetor")
