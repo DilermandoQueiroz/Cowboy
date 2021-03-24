@@ -1,4 +1,4 @@
-from ga import *
+from cowboy import *
 import math
 
 print("__________________________________________________________\n\
