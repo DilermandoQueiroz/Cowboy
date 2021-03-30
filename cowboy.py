@@ -82,8 +82,13 @@ class MultiVetor():
         return sub(self, mult2)
 
     def __xor__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
+
         return produto_externo(self, mult2)
     
+    __rxor__ = __xor__
+
     def __mul__(self, mult2):
         if not isinstance(mult2, MultiVetor):
             mult2 = MultiVetor(mult2)
@@ -561,11 +566,8 @@ def inverso(mult, a = -1):
     mult_rev = reverso(mult, a)
     mult_rev = mult_rev.componentes
     mult_norma_2 = norma_reversa_2(deepcopy(mult), a)
-
-    if not ValueError:
-        norma_2 = mult_norma_2.componentes[0][0]
-    else:
-        return ValueError("blade nulo")
+    norma_2 = mult_norma_2.componentes[0][0]
+    
 
     for blade in mult_rev:
         multr.append([blade[0] / norma_2, blade[1]])
