@@ -1,20 +1,21 @@
+# Biblioteca implementada por Dilermando Queiroz Neto
+# utilizando o livro
+
+# Álgebra Geométrica e Aplicações
+#    Fernandes, L. A. F.; Lavor, C.; Oliveira, M. M.
+#
+#    Sociedade Brasileira de Matemática Aplicada e Computacional (SBMAC)
+#    Notas em Matemática Aplicada (NoMA), Volume 85, 2017
+#
+#    ISSN: 2175-3385 | e-ISSN: 2236-5915
+#    ISBN: 978-85-8215-081-8 | e-ISBN: 978-85-8215-080-1
+#
+#    http://www.ic.uff.br/algebrageometrica
+
 # This Python file uses the following encoding: utf-8
+
 import math
 from copy import deepcopy
-
-'''
-Biblioteca implementada por Dilermando Queiroz Neto
-
-estrutura do multivetor [[coeficiente, base], [coeficiente, base], ...]
-base esta representada pelos numeros decimais
-ex: e1 = 1
-    e2 = 2
-    e1^e2 = 3
-    e3 = 4
-    e1^e3 = 5 
-    e2^e3 = 6
-    e1^e2^e3 = 7 
-'''
 
 class Metrica():
     '''Metrica ortogonal com assinatura p,q.
@@ -54,6 +55,15 @@ DEFAULT_METRIC = Metrica(4, 1)  # Default metric.
 
 class MultiVetor():
     '''Combinação linear de elementos da base de um espaço multivetorial
+    
+    A base esta representada pelos numeros decimais
+    ex: e1 = 1
+    e2 = 2
+    e1^e2 = 3
+    e3 = 4
+    e1^e3 = 5 
+    e2^e3 = 6
+    e1^e2^e3 = 7 
     '''
     def __init__(self, arg = None):
         '''MultiVetor(),
@@ -272,9 +282,6 @@ def analisesoma(mult):
     sorted(multr, key = lambda comp: comp[1])
 
     return multr
-
-def sortFirst(val):
-    return val[0]
 
 def produto_externo(mult1, mult2):
     '''Calcula o produto externo entre dois multivetores -- Não é um produto metrico
