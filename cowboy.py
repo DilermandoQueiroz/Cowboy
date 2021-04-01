@@ -90,6 +90,13 @@ class MultiVetor():
         return soma(mult2, self)
 
     def __sub__(self, mult2):
+        if not isinstance(mult2, MultiVetor):
+            mult2 = MultiVetor(mult2)
+        return sub(self, mult2)
+
+    __rsub__ = __sub__
+
+    def __sub__(self, mult2):
         return sub(self, mult2)
 
     def __xor__(self, mult2):
