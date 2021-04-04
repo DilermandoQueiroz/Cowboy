@@ -139,6 +139,14 @@ class MultiVetor():
         else:
             raise ValueError("nao eh um escalar")
     
+    def __abs__(self):
+        new_mult = list()
+
+        for blade in self.componentes:
+            new_mult.append([abs(blade[0]), blade[1]]) 
+        
+        return MultiVetor(new_mult)
+
     
     def __str__(self):
         '''str(self)
