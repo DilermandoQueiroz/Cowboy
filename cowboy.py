@@ -12,7 +12,7 @@
 #
 #    http://www.ic.uff.br/algebrageometrica
 
-# This Python file uses the following encoding: utf-8
+# This Python file uses the following encoding: iso-8859-1
 
 import math
 from copy import deepcopy
