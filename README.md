@@ -4,9 +4,10 @@ Cowboy é uma biblioteca Python para Álgebra Geométrica, ela foi desenvolvida 
 
 A Álgebra Geométrica é uma boa ferramenta para representar algebricamente os objetos geométricos,  tornando ela uma boa alternativa a Álgebra Linear, sua estrutura é construída baseada no conceito de subespaço vetorial.
 
+Algumas das interpretações geométricas:
+
 ![](https://upload.wikimedia.org/wikipedia/commons/2/27/N_vector_positive.svg)
 
-onde $\eta_i$ sãos os coeficientes.
 
 ### Estrutura do multivetor
 
