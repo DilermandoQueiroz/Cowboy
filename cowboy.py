@@ -1,3 +1,5 @@
+# This Python file uses the following encoding: utf-8
+
 # Biblioteca implementada por Dilermando Queiroz Neto
 # utilizando o livro
 
@@ -12,7 +14,6 @@
 #
 #    http://www.ic.uff.br/algebrageometrica
 
-# This Python file uses the following encoding: utf-8
 
 import math
 from copy import deepcopy
